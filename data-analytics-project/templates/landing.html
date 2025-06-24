@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌺 Tourism Analytics Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .hero-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 60px 40px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .btn-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: white;
+        }
+        
+        .stats-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-healthy { background-color: #28a745; }
+        .status-warning { background-color: #ffc107; }
+        .status-error { background-color: #dc3545; }
+        
+        .hotel-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom fixed-top">
+        <div class="container">
+            <span class="navbar-brand fw-bold">🌺 Tourism Analytics Platform</span>
+            <div class="navbar-nav ms-auto">
+                <span class="nav-item">
+                    <span id="systemStatus" class="nav-link">
+                        <span class="status-indicator status-warning"></span>
+                        Checking Status...
+                    </span>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="padding-top: 100px;">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1 class="display-4 fw-bold mb-4">
+                🌺 Welcome to Tourism Analytics Platform
+            </h1>
+            <p class="lead mb-4">
+                Comprehensive AI-powered analytics for Hawaiian hospitality businesses
+            </p>
+            <p class="text-muted mb-4">
+                Real-time sentiment analysis • Demand forecasting • Multilingual chatbot • CRM integration
+            </p>
+            <div class="mb-4">
+                <span class="badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 1.1rem; padding: 10px 20px;">
+                    ⚡ Powered by KoinTyme Innovation
+                </span>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="row mt-5" id="quickStats">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h3 class="text-primary" id="totalReviews">-</h3>
+                        <small class="text-muted">Total Reviews</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h3 class="text-success" id="totalLeads">-</h3>
+                        <small class="text-muted">Active Leads</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h3 class="text-info" id="chatSessions">-</h3>
+                        <small class="text-muted">Chat Sessions</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h3 class="text-warning" id="avgSentiment">-</h3>
+                        <small class="text-muted">Avg Sentiment</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hawaiian Hotels -->
+        <div class="row mb-5">
+            <div class="col-12 text-center mb-4">
+                <h2 class="fw-bold">🏨 Hawaiian Hotel Locations</h2>
+                <p class="text-light">Analytics available for all properties</p>
+                <div>
+                    <span class="hotel-badge">🏖️ Aloha Resort Waikiki</span>
+                    <span class="hotel-badge">🌊 Maui Beach Hotel & Spa</span>
+                    <span class="hotel-badge">🌋 Kona Village Resort</span>
+                    <span class="hotel-badge">✨ Halekulani Luxury</span>
+                    <span class="hotel-badge">🏔️ Napali Coast Inn</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Features -->
+        <div class="row">
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4 class="fw-bold">Interactive Dashboard</h4>
+                    <p class="text-muted">
+                        Real-time business intelligence with interactive charts and KPIs
+                    </p>
+                    <a href="#" class="btn-custom" onclick="openDashboard()">
+                        <i class="fas fa-chart-line"></i> Launch Dashboard
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h4 class="fw-bold">AI Analytics</h4>
+                    <p class="text-muted">
+                        Sentiment analysis, demand forecasting, and predictive insights
+                    </p>
+                    <button class="btn-custom" onclick="runSentimentAnalysis()">
+                        <i class="fas fa-heart"></i> Run Sentiment Analysis
+                    </button>
+                    <button class="btn-custom" onclick="runDemandForecastSimple()">
+                        <i class="fas fa-crystal-ball"></i> Generate Forecast
+                    </button>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h4 class="fw-bold">Multilingual Chatbot</h4>
+                    <p class="text-muted">
+                        AI-powered customer service with intent recognition and translation
+                    </p>
+                    <a href="/docs#/chat/send_message_api_v1_chat_message_post" class="btn-custom">
+                        <i class="fas fa-comments"></i> Chat API
+                    </a>
+                    <a href="/docs#/chat/get_chat_analytics_api_v1_chat_analytics_get" class="btn-custom">
+                        <i class="fas fa-chart-pie"></i> Chat Analytics
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4 class="fw-bold">CRM Integration</h4>
+                    <p class="text-muted">
+                        Lead management with HubSpot sync and conversion tracking
+                    </p>
+                    <a href="/docs#/leads/create_lead_api_v1_leads__post" class="btn-custom">
+                        <i class="fas fa-user-plus"></i> Lead Management
+                    </a>
+                    <a href="/docs#/leads/get_lead_analytics_api_v1_leads_analytics__business_id__get" class="btn-custom">
+                        <i class="fas fa-funnel-dollar"></i> Lead Analytics
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="feature-card text-center">
+                    <h3 class="fw-bold mb-4">🚀 Quick Actions</h3>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a href="/docs" class="btn-custom w-100">
+                                <i class="fas fa-book"></i><br>
+                                API Documentation
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/api/v1/health/detailed" class="btn-custom w-100" target="_blank">
+                                <i class="fas fa-heartbeat"></i><br>
+                                System Health
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn-custom w-100" onclick="refreshStats()">
+                                <i class="fas fa-sync-alt"></i><br>
+                                Refresh Data
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="https://github.com/rprovine/tourism-analytics-platform" class="btn-custom w-100" target="_blank">
+                                <i class="fas fa-code"></i><br>
+                                View Source
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-light mt-5 mb-3">
+            <p>
+                <strong>🚀 Engineered & Maintained by <a href="https://kointyme.com" class="text-light" target="_blank" style="text-decoration: none; font-weight: bold;">KoinTyme</a></strong><br>
+                <small>
+                    🌺 Built with FastAPI, Streamlit, and AI • 
+                    <a href="/docs" class="text-light">API Docs</a> • 
+                    <a href="/api/v1/health/" class="text-light">Health Check</a>
+                </small>
+            </p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Check system status on load
+        async function checkSystemStatus() {
+            try {
+                const response = await fetch('/api/v1/health/detailed');
+                const data = await response.json();
+                
+                const statusElement = document.getElementById('systemStatus');
+                const indicator = statusElement.querySelector('.status-indicator');
+                
+                if (data.status === 'healthy') {
+                    indicator.className = 'status-indicator status-healthy';
+                    statusElement.innerHTML = '<span class="status-indicator status-healthy"></span>System Healthy';
+                } else {
+                    indicator.className = 'status-indicator status-warning';
+                    statusElement.innerHTML = '<span class="status-indicator status-warning"></span>System Issues';
+                }
+            } catch (error) {
+                const statusElement = document.getElementById('systemStatus');
+                statusElement.innerHTML = '<span class="status-indicator status-error"></span>System Offline';
+            }
+        }
+        
+        // Load quick stats
+        async function loadQuickStats() {
+            try {
+                // Get stats for main hotel
+                const businessId = 'aloha_resort_waikiki';
+                
+                // Load reviews
+                const reviewsResponse = await fetch(`/api/v1/reviews/statistics?business_id=${businessId}`);
+                const reviewsData = await reviewsResponse.json();
+                
+                if (reviewsData.status === 'success') {
+                    document.getElementById('totalReviews').textContent = reviewsData.statistics.total_reviews || '0';
+                    document.getElementById('avgSentiment').textContent = reviewsData.statistics.average_rating?.toFixed(1) || 'N/A';
+                }
+                
+                // Load leads
+                const leadsResponse = await fetch(`/api/v1/leads/analytics/${businessId}`);
+                const leadsData = await leadsResponse.json();
+                
+                if (leadsData.status === 'success') {
+                    document.getElementById('totalLeads').textContent = leadsData.analytics.total_leads || '0';
+                }
+                
+                // Load chat sessions
+                const chatResponse = await fetch(`/api/v1/chat/analytics?business_id=${businessId}`);
+                const chatData = await chatResponse.json();
+                
+                if (chatData.status === 'success') {
+                    document.getElementById('chatSessions').textContent = chatData.analytics.total_sessions || '0';
+                }
+                
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+        
+        function refreshStats() {
+            // Show loading
+            document.getElementById('totalReviews').textContent = '...';
+            document.getElementById('totalLeads').textContent = '...';
+            document.getElementById('chatSessions').textContent = '...';
+            document.getElementById('avgSentiment').textContent = '...';
+            
+            // Reload stats
+            loadQuickStats();
+        }
+        
+        // Run sentiment analysis
+        async function runSentimentAnalysis() {
+            const button = event.target;
+            
+            try {
+                const businessId = 'aloha_resort_waikiki';
+                
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+                button.disabled = true;
+                
+                console.log('Starting sentiment analysis...');
+                
+                const response = await fetch(`/api/v1/reviews/analytics?business_id=${businessId}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Sentiment data:', data);
+                
+                if (data.status === 'success' && data.analytics) {
+                    const analytics = data.analytics;
+                    const keywords = analytics.common_keywords || [];
+                    const topKeywords = keywords.slice(0, 5).join(', ') || 'None available';
+                    
+                    const message = `Sentiment Analysis Complete!
+
+Overall Sentiment: ${analytics.overall_sentiment || 'Unknown'}
+Average Score: ${analytics.average_score || 'N/A'}
+Total Reviews: ${analytics.total_reviews || 0}
+
+Sentiment Distribution:
+• Positive: ${analytics.sentiment_distribution?.positive || 0}
+• Negative: ${analytics.sentiment_distribution?.negative || 0}  
+• Neutral: ${analytics.sentiment_distribution?.neutral || 0}
+
+Top Keywords: ${topKeywords}`;
+                    
+                    alert(message);
+                } else {
+                    alert('Error running sentiment analysis: ' + (data.message || 'Unknown error'));
+                }
+                
+            } catch (error) {
+                console.error('Sentiment error:', error);
+                alert('Error running sentiment analysis: ' + error.message);
+            } finally {
+                button.innerHTML = '<i class="fas fa-heart"></i> Run Sentiment Analysis';
+                button.disabled = false;
+            }
+        }
+        
+        // Run demand forecast (simple GET version)
+        async function runDemandForecastSimple() {
+            const button = event.target;
+            
+            try {
+                const businessId = 'aloha_resort_waikiki';
+                const daysAhead = 7;
+                
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Forecasting...';
+                button.disabled = true;
+                
+                console.log('Starting forecast request...');
+                
+                const response = await fetch(`/api/v1/forecasting/forecast?business_id=${businessId}&days_ahead=${daysAhead}`);
+                
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (data.status === 'success' && data.predictions && data.predictions.length > 0) {
+                    const predictions = data.predictions;
+                    const totalVisitors = predictions.reduce((sum, p) => sum + (p.predicted_visitors || 0), 0);
+                    const avgPrediction = Math.round(totalVisitors / predictions.length);
+                    
+                    const message = `7-Day Demand Forecast Complete!
+
+Average Daily Visitors: ${avgPrediction}
+Forecast Period: ${predictions[0].date} to ${predictions[predictions.length-1].date}
+Model Used: ${predictions[0].model_used || 'random_forest'}
+
+Total 7-day forecast: ${Math.round(totalVisitors)} visitors
+Model Performance: R² = ${(data.model_performance?.r2 || 0).toFixed(3)}
+
+Detailed forecast saved to database.`;
+                    
+                    alert(message);
+                } else {
+                    alert('Error generating forecast: ' + (data.message || 'Unknown error'));
+                }
+                
+            } catch (error) {
+                console.error('Forecast error:', error);
+                alert('Error generating forecast: ' + error.message);
+            } finally {
+                button.innerHTML = '<i class="fas fa-crystal-ball"></i> Generate Forecast';
+                button.disabled = false;
+            }
+        }
+        
+        // Open dashboard - handles both local and production
+        function openDashboard() {
+            // Check if we're in production (no localhost)
+            const isProduction = !window.location.hostname.includes('localhost');
+            
+            if (isProduction) {
+                // In production, show demo dashboard with embedded data
+                showDashboardModal();
+            } else {
+                // In development, open Streamlit
+                window.open('http://localhost:8501', '_blank');
+            }
+        }
+        
+        function showDashboardModal() {
+            // Create a modal with embedded charts
+            const modal = document.createElement('div');
+            modal.innerHTML = `
+                <div class="modal fade" id="dashboardModal" tabindex="-1" style="display: block; background: rgba(0,0,0,0.5);">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">📊 Tourism Analytics Dashboard</h5>
+                                <button type="button" class="btn-close" onclick="closeDashboardModal()"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">🏨 Hotel Performance</div>
+                                            <div class="card-body">
+                                                <canvas id="hotelChart" width="400" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">💭 Sentiment Analysis</div>
+                                            <div class="card-body">
+                                                <canvas id="sentimentChart" width="400" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-header">📈 Revenue Forecast</div>
+                                            <div class="card-body">
+                                                <canvas id="forecastChart" width="800" height="300"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="alert alert-info mt-3">
+                                    <strong>🚀 Powered by KoinTyme</strong><br>
+                                    This is a demo dashboard with Hawaiian hotel data. 
+                                    For the full Streamlit experience, contact us for enterprise deployment.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // Create simple charts
+            setTimeout(() => {
+                createDemoCharts();
+            }, 100);
+        }
+        
+        function closeDashboardModal() {
+            const modal = document.getElementById('dashboardModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        function createDemoCharts() {
+            // Hotel performance chart
+            const hotelCanvas = document.getElementById('hotelChart');
+            if (hotelCanvas) {
+                const ctx = hotelCanvas.getContext('2d');
+                ctx.fillStyle = '#667eea';
+                ctx.fillRect(50, 50, 100, 100);
+                ctx.fillStyle = '#764ba2';
+                ctx.fillRect(200, 30, 100, 120);
+                ctx.fillStyle = '#ff6b6b';
+                ctx.fillRect(350, 70, 100, 80);
+                
+                ctx.fillStyle = '#333';
+                ctx.font = '12px Arial';
+                ctx.fillText('Occupancy Rate by Hotel', 10, 20);
+                ctx.fillText('Aloha Beach', 50, 170);
+                ctx.fillText('Maui Paradise', 200, 170);
+                ctx.fillText('Big Island', 350, 170);
+            }
+            
+            // Sentiment chart
+            const sentimentCanvas = document.getElementById('sentimentChart');
+            if (sentimentCanvas) {
+                const ctx = sentimentCanvas.getContext('2d');
+                ctx.beginPath();
+                ctx.arc(200, 100, 80, 0, Math.PI * 1.4);
+                ctx.fillStyle = '#4CAF50';
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(200, 100, 80, Math.PI * 1.4, Math.PI * 1.8);
+                ctx.fillStyle = '#FFC107';
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(200, 100, 80, Math.PI * 1.8, Math.PI * 2);
+                ctx.fillStyle = '#F44336';
+                ctx.fill();
+                
+                ctx.fillStyle = '#333';
+                ctx.font = '12px Arial';
+                ctx.fillText('Sentiment Distribution', 10, 20);
+                ctx.fillText('Positive: 70%', 10, 40);
+                ctx.fillText('Neutral: 25%', 10, 55);
+                ctx.fillText('Negative: 5%', 10, 70);
+            }
+            
+            // Forecast chart
+            const forecastCanvas = document.getElementById('forecastChart');
+            if (forecastCanvas) {
+                const ctx = forecastCanvas.getContext('2d');
+                ctx.strokeStyle = '#667eea';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(50, 200);
+                
+                for (let i = 0; i < 30; i++) {
+                    const x = 50 + (i * 25);
+                    const y = 200 - (Math.sin(i * 0.3) * 50 + Math.random() * 30);
+                    ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+                
+                ctx.fillStyle = '#333';
+                ctx.font = '12px Arial';
+                ctx.fillText('30-Day Revenue Forecast', 10, 20);
+                ctx.fillText('Predicted Revenue Growth: +15%', 10, 40);
+            }
+        }
+        
+        // Load on page ready
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSystemStatus();
+            loadQuickStats();
+        });
+    </script>
+</body>
+</html>
